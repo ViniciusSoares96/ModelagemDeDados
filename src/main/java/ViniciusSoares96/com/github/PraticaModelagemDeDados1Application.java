@@ -1,5 +1,6 @@
 package ViniciusSoares96.com.github;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import ViniciusSoares96.com.github.domain.Cidade;
 import ViniciusSoares96.com.github.domain.Cliente;
 import ViniciusSoares96.com.github.domain.Endereco;
 import ViniciusSoares96.com.github.domain.Estado;
+import ViniciusSoares96.com.github.domain.Pagamento;
+import ViniciusSoares96.com.github.domain.PagamentoComBoleto;
+import ViniciusSoares96.com.github.domain.PagamentoComCartao;
+import ViniciusSoares96.com.github.domain.Pedido;
 import ViniciusSoares96.com.github.domain.Produto;
+import ViniciusSoares96.com.github.domain.enums.EstadoPagamento;
 import ViniciusSoares96.com.github.domain.enums.TipoCliente;
 import ViniciusSoares96.com.github.repositories.CategoriaRepository;
 import ViniciusSoares96.com.github.repositories.CidadeRepository;
 import ViniciusSoares96.com.github.repositories.ClienteRepository;
 import ViniciusSoares96.com.github.repositories.EnderecoRepository;
 import ViniciusSoares96.com.github.repositories.EstadoRepository;
+import ViniciusSoares96.com.github.repositories.PagamentoRepository;
+import ViniciusSoares96.com.github.repositories.PedidoRepository;
 import ViniciusSoares96.com.github.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class PraticaModelagemDeDados1Application implements CommandLineRunner {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 
 	public static void main(String[] args) {
@@ -91,6 +105,25 @@ public class PraticaModelagemDeDados1Application implements CommandLineRunner {
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1,e2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy hh:mm");
+		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Pedido ped1 = new Pedido(null, sdf.parse("30/10/2022 22:14"), cli1, e1);
+		
+		Pedido ped2 = new Pedido(null,sdf.parse("29/06/2023 21:37"),cli1,e2);
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComBoleto(null,EstadoPagamento.PENDENTE, ped2,sdf2.parse("06/07/2023"), null);
+		ped2.setPagamento(pagto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
 		
 		
 	}

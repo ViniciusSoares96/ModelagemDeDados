@@ -13,6 +13,7 @@ import ViniciusSoares96.com.github.domain.Cidade;
 import ViniciusSoares96.com.github.domain.Cliente;
 import ViniciusSoares96.com.github.domain.Endereco;
 import ViniciusSoares96.com.github.domain.Estado;
+import ViniciusSoares96.com.github.domain.ItemPedido;
 import ViniciusSoares96.com.github.domain.Pagamento;
 import ViniciusSoares96.com.github.domain.PagamentoComBoleto;
 import ViniciusSoares96.com.github.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import ViniciusSoares96.com.github.repositories.CidadeRepository;
 import ViniciusSoares96.com.github.repositories.ClienteRepository;
 import ViniciusSoares96.com.github.repositories.EnderecoRepository;
 import ViniciusSoares96.com.github.repositories.EstadoRepository;
+import ViniciusSoares96.com.github.repositories.ItemPedidoRepository;
 import ViniciusSoares96.com.github.repositories.PagamentoRepository;
 import ViniciusSoares96.com.github.repositories.PedidoRepository;
 import ViniciusSoares96.com.github.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class PraticaModelagemDeDados1Application implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 
 	public static void main(String[] args) {
@@ -124,6 +129,19 @@ public class PraticaModelagemDeDados1Application implements CommandLineRunner {
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1,p1,0.0, 1, 2000.0);
+		ItemPedido ip2 = new ItemPedido(ped1,p3,0.0,2,80.0);
+		ItemPedido ip3 = new ItemPedido(ped2,p2,100.0,1,800.0);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
 		
 		
 	}
